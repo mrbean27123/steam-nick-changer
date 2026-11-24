@@ -1,6 +1,6 @@
 [project]
 name = "steam-nick-changer"
-version = "1.0.2"
+version = "1.0.3"
 description = "Changes the Steam profile name to the next nickname from a list."
 readme = "README.md"
 requires-python = ">=3.14"
