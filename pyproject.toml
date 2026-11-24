@@ -1,0 +1,79 @@
+[project]
+name = "steam-nick-changer"
+version = "1.0.0"
+description = "Changes the Steam profile name to the next nickname from a list."
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "httpx>=0.28.1",
+    "playwright>=1.65.2",
+]
+
+[project.scripts]
+steam-nick-changer = "steam_nick_changer.app:main"
+
+[build-system]
+requires = ["uv_build>=0.13.9,<0.14.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "poethepoet>=0.49.0",
+    "pyinstaller>=6.22.3",
+    "pytest>=9.2.0",
+    "ruff>=0.17.6",
+]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.poe.env]
+# Before Python 3.15 (PEP 686) piped stdio on Windows uses the locale code page,
+# which garbles Cyrillic nicknames in task output.
+PYTHONUTF8 = "1"
+
+[tool.poe.tasks]
+dev = "python -m steam_nick_changer.app"
+dry = "python -m steam_nick_changer.app --dry-run"
+lint = [{ cmd = "ruff check" }, { cmd = "ruff format --check" }]
+fmt = [{ cmd = "ruff format" }, { cmd = "ruff check --fix" }]
+test = "pytest"
+
+# The Playwright driver (node.exe and its JS) is package data, which PyInstaller does not
+# collect on its own. The project metadata is needed for importlib.metadata.version().
+[tool.poe.tasks.build]
+cmd = """
+pyinstaller src/steam_nick_changer/app.py
+  --name steam-nick-changer
+  --onefile
+  --windowed
+  --noupx
+  --noconfirm
+  --clean
+  --copy-metadata steam-nick-changer
+  --collect-data playwright
+  --add-data "src/steam_nick_changer/config.example.toml;steam_nick_changer"
+"""
+
+# Pushing the tag starts the release workflow, which builds the exe and publishes it.
+[tool.poe.tasks.release]
+help = "Bump the version, commit, tag and push: poe release [patch|minor|major]"
+interpreter = "pwsh"
+args = [{ name = "part", positional = true, default = "patch" }]
+shell = """
+$ErrorActionPreference = 'Stop'
+$PSNativeCommandUseErrorActionPreference = $true
+# commit -a must not sweep unrelated edits into the release commit.
+if (git status --porcelain) { throw 'Commit or stash your changes first.' }
+uv version --bump $env:part
+$v = uv version --short
+git commit -am "chore(release): v$v"
+git tag -a "v$v" -m "v$v"
+git push --follow-tags
+"""

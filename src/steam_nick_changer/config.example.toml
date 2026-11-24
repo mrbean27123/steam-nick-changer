@@ -1,0 +1,23 @@
+# Steam Nick Changer settings. Edit this file and run the program again.
+
+# How the next nickname is chosen.
+#   "queue":  go through a shuffled list; reshuffle when it is exhausted.
+#   "random": a random nickname that differs from the current one.
+mode = "queue"
+
+# Replace Cyrillic letters with identical-looking Latin ones (Steam limits a name to 32
+# bytes in UTF-8, and a Cyrillic letter takes two bytes).
+latin_lookalikes = true
+
+# Change the name at most once per calendar day.
+once_a_day = false
+
+# Show a warning when a nickname does not fit into the 32-byte Steam limit.
+warn_long_nicknames = true
+
+# Nicknames to pick from. Each one must be unique.
+nicknames = [
+    "Example 1",
+    "Example 2",
+    "Example 3",
+]

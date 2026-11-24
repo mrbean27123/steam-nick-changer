@@ -1,0 +1,19 @@
+# User data and secrets
+config.toml
+state.json
+auth_state.json
+*.log*
+*.old
+*.new
+
+# Build output
+dist/
+build/
+*.spec
+
+# Python and tooling caches
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+*.tmp

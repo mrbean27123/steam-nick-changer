@@ -1,0 +1,55 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "poe dev",
+      "detail": "Run the app",
+      "type": "shell",
+      "command": "uv run poe dev",
+      "problemMatcher": []
+    },
+    {
+      "label": "poe dry",
+      "detail": "Run the app with --dry-run",
+      "type": "shell",
+      "command": "uv run poe dry",
+      "problemMatcher": []
+    },
+    {
+      "label": "poe lint",
+      "detail": "Lint and check formatting",
+      "type": "shell",
+      "command": "uv run poe lint",
+      "problemMatcher": []
+    },
+    {
+      "label": "poe fmt",
+      "detail": "Format and auto-fix",
+      "type": "shell",
+      "command": "uv run poe fmt",
+      "problemMatcher": []
+    },
+    {
+      "label": "poe test",
+      "detail": "Run tests",
+      "type": "shell",
+      "command": "uv run poe test",
+      "problemMatcher": [],
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "poe build",
+      "detail": "Build the exe",
+      "type": "shell",
+      "command": "uv run poe build",
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    }
+  ]
+}
