@@ -12,14 +12,17 @@ from steam_nick_changer.config import APP_DIR, AUTH_STATE_PATH, FROZEN, Config, 
 
 TITLE = "Steam Nick Changer"
 LOG_PATH = APP_DIR / "steam-nick-changer.log"
+# MessageBoxW icon flags from the Win32 API.
 MB_ICONERROR = 0x10
+MB_ICONWARNING = 0x30
+MB_ICONINFORMATION = 0x40
 
 log = logging.getLogger("steam_nick_changer")
 
 
-def show_message(text: str) -> None:
-    """Show a modal error box; the frozen exe has no console to print to."""
-    ctypes.windll.user32.MessageBoxW(0, text, TITLE, MB_ICONERROR)
+def show_message(text: str, icon: int = MB_ICONERROR) -> None:
+    """Show a modal message box, an error by default; the frozen exe has no console."""
+    ctypes.windll.user32.MessageBoxW(0, text, TITLE, icon)
 
 
 def setup_logging() -> None:
@@ -48,7 +51,8 @@ def warn_long_nicknames(cfg: Config) -> None:
         log.warning("Nicknames over the byte limit: %s", too_long)
         show_message(
             f"Nicknames over {nicknames.MAX_NAME_BYTES} bytes: "
-            f"{len(too_long)}/{len(cfg.nicknames)}\n\n" + "\n".join(too_long)
+            f"{len(too_long)}/{len(cfg.nicknames)}\n\n" + "\n".join(too_long),
+            MB_ICONWARNING,
         )
 
 
@@ -83,7 +87,11 @@ def run(dry_run: bool) -> None:
     """One full run: config, nickname choice, Steam change, state save."""
     if not config.CONFIG_PATH.exists():
         config.write_example_config()
-        show_message(f"Created {config.CONFIG_PATH}.\nEdit it, then run the program again.")
+        show_message(
+            f"Created {config.CONFIG_PATH}.\n\n"
+            "Put your nicknames into it, then run the program again.",
+            MB_ICONINFORMATION,
+        )
         return
 
     cfg = config.load_config()
