@@ -52,10 +52,10 @@ cmd = """
 pyinstaller src/steam_nick_changer/app.py
   --name steam-nick-changer
   --onefile
+  --icon assets/icon.ico
   --windowed
   --noupx
   --noconfirm
-  --clean
   --copy-metadata steam-nick-changer
   --collect-data playwright
   --add-data "src/steam_nick_changer/config.example.toml;steam_nick_changer"
