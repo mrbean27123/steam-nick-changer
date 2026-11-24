@@ -50,6 +50,22 @@
         "kind": "build",
         "isDefault": true
       }
+    },
+    {
+      "label": "poe release",
+      "detail": "Bump the version, commit, tag and push; CI publishes the exe",
+      "type": "shell",
+      "command": "uv run poe release ${input:bump}",
+      "problemMatcher": []
+    }
+  ],
+  "inputs": [
+    {
+      "id": "bump",
+      "type": "pickString",
+      "description": "Version part to bump",
+      "options": ["patch", "minor", "major"],
+      "default": "patch"
     }
   ]
 }
